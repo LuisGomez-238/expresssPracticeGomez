@@ -78,14 +78,19 @@ app.post('/car', async function(req, res) {
  
  
 
-app.delete('/car/:id', async function(req,res) {
+ app.delete('/car/:car_id', async function(req, res) {
   try {
-    console.log('req.params /car/:id', req.params)
+    const { deleted, car_id } = req.body;
 
-    res.json('success')
-  } catch (err) {
+    const query = await req.db.query(
+      `UPDATE car SET deleted = ? WHERE car_id = ?`,
+      [deleted, car_id]
+    );
 
-  }
+    res.json({ success: true, message: 'Car successfully deleted', data: null });
+ } catch (err) {
+    res.json({ success: false, message: err.message, data: null });
+ }
 });
 
 app.put('/car/:car_id', async function(req, res) {
